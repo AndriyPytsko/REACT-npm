@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, ListGroup, ListGroupItem } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
 class DishDetail extends Component {
 
@@ -18,20 +18,17 @@ class DishDetail extends Component {
         if (comments != null) {
             const list = comments.map((item) => {
                 return (
-                    <ListGroupItem key={item.id}>
-                        <p>
-                            {item.comment}
-                        </p>
-                        -- {item.author}, {item.date}
-                    </ListGroupItem>
+                    <div key = {item.id} className='list-unstyled m-3'>
+                        <li className= "mb-1">{item.comment}</li>
+                        <li className="mb-1"> -- {item.author}, {item.date}</li>
+                    </div>
+
                 );
             });
             return (
                 <div>
                     <h4>Comments</h4>
-                    <ListGroup>
-                        {list}
-                    </ListGroup>
+                    {list}
                 </div>
             );
         }
