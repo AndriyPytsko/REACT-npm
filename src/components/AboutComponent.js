@@ -12,7 +12,7 @@ function About(props) {
 
     function RenderLeader({ leader }) {
         return (
-            <Media className="mt-5">
+            <Media key={leader.id} className="mt-5">
                 <Media left>
                     <Media className="mr-5" src={leader.image} alt={leader.name} />
                 </Media>
