@@ -40,13 +40,13 @@ class Contact extends Component {
         alert('Current State is: ' + JSON.stringify(this.state));
         event.preventDefault();
     }
-    handleBlur(field){
-        return () => {
+    handleBlur = (field) => (event) => {
+
             this.setState({
                 touched: { ...this.state.touched , [field]: true}
             });
-        };
-    }
+
+    };
     validate(firstname, lastname, email, telnum){
         const errors = {
             firstname: '',
