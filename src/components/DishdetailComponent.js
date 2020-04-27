@@ -4,11 +4,14 @@ import { Card, CardImg, CardText, CardBody,
     Button, Modal, ModalHeader, ModalBody, Row, Col, Label } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 const minLength = (len) => (val) => val && (val.length >= len) ;
 const maxLength = (len) => (val) => !val || (val.length <= len);
 
 class CommentForm extends Component{
+
     constructor(props) {
         super(props);
         this.state = {
@@ -24,8 +27,7 @@ class CommentForm extends Component{
         });
     }
     handleSubmit(values){
-        console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
         this.toggleModal();
     }
 
@@ -105,7 +107,7 @@ class CommentForm extends Component{
 function RenderDish({ dish }) {
     return (
         <Card>
-            <CardImg top src={dish.image} alt={dish.name}/>
+            <CardImg top src={baseUrl + dish.image} alt={dish.name}/>
             <CardBody>
                 <CardTitle>{dish.name}</CardTitle>
                 <CardText>{dish.description}</CardText>
@@ -113,8 +115,7 @@ function RenderDish({ dish }) {
         </Card>
     );
 }
-
-function RenderComments({ comments }) {
+function RenderComments({ comments, dishId, addComment }) {
     if (comments != null) {
         const list = comments.map((item) => {
             return (
@@ -131,7 +132,7 @@ function RenderComments({ comments }) {
             <div>
                 <h4>Comments</h4>
                 {list}
-                <CommentForm/>
+                <CommentForm dishId={dishId} addComment={addComment}/>
             </div>
         );
     }
@@ -141,10 +142,27 @@ function RenderComments({ comments }) {
         );
     }
 }
-
 function DishDetail(props) {
     const dish = props.dish;
-    if (dish != null) {
+    if (props.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (props.errMess) {
+        return(
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else if (props.dish != null) {
         return (
             <div className="container">
                 <div className="row">
@@ -162,7 +180,7 @@ function DishDetail(props) {
                         <RenderDish dish={props.dish}/>
                     </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments}/>
+                        <RenderComments comments={props.comments} dishId={dish.id} addComment={props.addComments}/>
                     </div>
                 </div>
             </div>
@@ -174,6 +192,5 @@ function DishDetail(props) {
         );
     }
 }
-
 
 export default DishDetail;
